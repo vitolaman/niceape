@@ -1,6 +1,13 @@
 import { useUnifiedWalletContext, useWallet } from '@jup-ag/wallet-adapter';
 import Link from 'next/link';
 import { Button } from './ui/button';
+import { CreatePoolButton } from './CreatePoolButton';
+import { useMemo } from 'react';
+import { shortenAddress } from '@/lib/utils';
+
+import { useUnifiedWalletContext, useWallet } from '@jup-ag/wallet-adapter';
+import Link from 'next/link';
+import { Button } from './ui/button';
 import { useMemo, useState } from 'react';
 import { shortenAddress } from '@/lib/utils';
 
@@ -12,6 +19,7 @@ export const Header = () => {
   const address = useMemo(() => publicKey?.toBase58(), [publicKey]);
 
   const handleConnectWallet = () => {
+    // In a real implementation, this would connect to a Solana wallet
     setShowModal(true);
   };
 
@@ -26,15 +34,9 @@ export const Header = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="/about" className="text-gray-600 hover:text-gray-900 transition-colors">
-            About
-          </Link>
-          <Link href="/help" className="text-gray-600 hover:text-gray-900 transition-colors">
-            Help
-          </Link>
-          <Link href="/terms" className="text-gray-600 hover:text-gray-900 transition-colors">
-            Terms
-          </Link>
+          <Link href="/about" className="text-gray-600 hover:text-gray-900 transition-colors">About</Link>
+          <Link href="/help" className="text-gray-600 hover:text-gray-900 transition-colors">Help</Link>
+          <Link href="/terms" className="text-gray-600 hover:text-gray-900 transition-colors">Terms</Link>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -44,19 +46,9 @@ export const Header = () => {
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {isMenuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             )}
           </svg>
         </button>
@@ -64,7 +56,7 @@ export const Header = () => {
         {/* Wallet Connection */}
         <div className="hidden md:flex items-center gap-4">
           {address ? (
-            <Button
+            <Button 
               onClick={() => disconnect()}
               className="bg-green-600 hover:bg-green-700 text-white"
             >
@@ -72,7 +64,9 @@ export const Header = () => {
             </Button>
           ) : (
             <Button
-              onClick={handleConnectWallet}
+              onClick={() => {
+                handleConnectWallet();
+              }}
               className="bg-green-600 hover:bg-green-700 text-white"
             >
               Connect Wallet
@@ -85,22 +79,22 @@ export const Header = () => {
       {isMenuOpen && (
         <div className="md:hidden mt-4 pb-4 border-t">
           <nav className="flex flex-col gap-4 pt-4">
-            <Link
-              href="/about"
+            <Link 
+              href="/about" 
               className="text-gray-600 hover:text-gray-900 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               About
             </Link>
-            <Link
-              href="/help"
+            <Link 
+              href="/help" 
               className="text-gray-600 hover:text-gray-900 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Help
             </Link>
-            <Link
-              href="/terms"
+            <Link 
+              href="/terms" 
               className="text-gray-600 hover:text-gray-900 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
@@ -108,7 +102,7 @@ export const Header = () => {
             </Link>
             <div className="pt-2 border-t">
               {address ? (
-                <Button
+                <Button 
                   onClick={() => {
                     disconnect();
                     setIsMenuOpen(false);
