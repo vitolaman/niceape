@@ -59,7 +59,7 @@ const sampleCampaigns = [
 
 const ActiveCampaigns = () => {
   return (
-    <div className="py-16 px-4">
+    <div id="campaigns" className="py-16 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h3 className="text-3xl font-bold text-gray-900 mb-4">Active Campaigns</h3>

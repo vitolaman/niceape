@@ -8,7 +8,11 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">🦍</span>
+              <img
+                src="/logo.jpg"
+                alt="NiceApe Logo"
+                className="w-6 h-6 rounded-full object-cover"
+              />
               <span className="text-xl font-bold">NiceApe</span>
             </div>
             <p className="text-gray-400 mt-2">Trade to Donate</p>

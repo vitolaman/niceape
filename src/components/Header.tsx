@@ -19,9 +19,14 @@ export const Header = () => {
     <header className="w-full px-4 py-4 bg-white border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo Section */}
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl">🦍</span>
-          <span className="whitespace-nowrap text-xl font-bold text-gray-900">NiceApe</span>
+        <Link href="/" className="flex items-center gap-3">
+          <img src="/logo.jpg" alt="NiceApe Logo" className="w-10 h-10 rounded-full object-cover" />
+          <div className="flex flex-col">
+            <span className="text-xl font-bold text-gray-900 leading-tight">NiceApe</span>
+            <span className="text-xs text-green-600 font-medium uppercase tracking-wide">
+              Trade to Donate
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
