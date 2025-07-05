@@ -62,8 +62,10 @@ const ActiveCampaigns = () => {
     <div id="campaigns" className="py-16 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h3 className="text-3xl font-bold text-gray-900 mb-4">Active Campaigns</h3>
-          <p className="text-lg text-gray-600">
+          <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            Active Campaigns
+          </h3>
+          <p className="text-lg text-gray-600 dark:text-gray-300">
             Support causes you care about by trading their tokens
           </p>
         </div>
@@ -75,7 +77,7 @@ const ActiveCampaigns = () => {
         </div>
 
         <div className="text-center mt-12">
-          <p className="text-lg text-gray-600 font-medium">
+          <p className="text-lg text-gray-600 dark:text-gray-300 font-medium">
             Trade with NiceApe, make every swap count! 🦍
           </p>
         </div>

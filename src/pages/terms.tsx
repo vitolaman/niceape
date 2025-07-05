@@ -11,14 +11,18 @@ export default function Terms() {
         <div className="py-16 px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">Terms of Service</h1>
-              <p className="text-xl text-gray-600">Last updated: January 2025</p>
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                Terms of Service
+              </h1>
+              <p className="text-xl text-gray-600 dark:text-gray-400">Last updated: January 2025</p>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
-              <div className="space-y-8 text-gray-600">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+              <div className="space-y-8 text-gray-600 dark:text-gray-400">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Acceptance of Terms</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    1. Acceptance of Terms
+                  </h2>
                   <p>
                     By accessing and using NiceApe, you accept and agree to be bound by the terms
                     and provision of this agreement.
@@ -26,7 +30,9 @@ export default function Terms() {
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Use License</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    2. Use License
+                  </h2>
                   <p>
                     Permission is granted to temporarily use NiceApe for personal, non-commercial
                     transitory viewing only. This is the grant of a license, not a transfer of
@@ -41,7 +47,9 @@ export default function Terms() {
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">3. Disclaimer</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    3. Disclaimer
+                  </h2>
                   <p>
                     The materials on NiceApe are provided on an 'as is' basis. NiceApe makes no
                     warranties, expressed or implied, and hereby disclaim and negate all other
@@ -52,7 +60,9 @@ export default function Terms() {
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Limitations</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    4. Limitations
+                  </h2>
                   <p>
                     In no event shall NiceApe or its suppliers be liable for any damages (including,
                     without limitation, damages for loss of data or profit, or due to business
@@ -66,7 +76,7 @@ export default function Terms() {
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                     5. Accuracy of Materials
                   </h2>
                   <p>
@@ -79,7 +89,9 @@ export default function Terms() {
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Links</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    6. Links
+                  </h2>
                   <p>
                     NiceApe has not reviewed all of the sites linked to our website and is not
                     responsible for the contents of any such linked site. The inclusion of any link
@@ -89,7 +101,9 @@ export default function Terms() {
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Modifications</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    7. Modifications
+                  </h2>
                   <p>
                     NiceApe may revise these terms of service for its website at any time without
                     notice. By using this website, you are agreeing to be bound by the then current
@@ -98,7 +112,9 @@ export default function Terms() {
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Governing Law</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    8. Governing Law
+                  </h2>
                   <p>
                     These terms and conditions are governed by and construed in accordance with the
                     laws of the jurisdiction in which NiceApe operates and you irrevocably submit to

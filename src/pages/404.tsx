@@ -53,7 +53,7 @@ export default function Custom404() {
             <div className="text-6xl mb-6">🍌</div>
 
             {/* 404 Title */}
-            <h1 className="text-6xl font-bold text-gray-900 mb-6">404</h1>
+            <h1 className="text-6xl font-bold text-gray-900 dark:text-white mb-6">404</h1>
 
             {/* Subtitle */}
             <h2 className="text-2xl font-semibold text-gray-700 mb-6">Oops! This ape got lost</h2>
