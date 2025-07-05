@@ -2,12 +2,6 @@ import { useUnifiedWalletContext, useWallet } from '@jup-ag/wallet-adapter';
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { CreatePoolButton } from './CreatePoolButton';
-import { useMemo } from 'react';
-import { shortenAddress } from '@/lib/utils';
-
-import { useUnifiedWalletContext, useWallet } from '@jup-ag/wallet-adapter';
-import Link from 'next/link';
-import { Button } from './ui/button';
 import { useMemo, useState } from 'react';
 import { shortenAddress } from '@/lib/utils';
 
