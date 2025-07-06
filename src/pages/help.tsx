@@ -32,9 +32,9 @@ export default function Help() {
                         How do I create a campaign?
                       </h3>
                       <p className="text-gray-600 dark:text-gray-400">
-                        Connect your wallet and click "Launch Campaign" to create a token for your
-                        cause. You'll need to provide campaign details, set a fundraising goal, and
-                        submit it for review.
+                        Connect your wallet and click &quot;Launch Campaign&quot; to create a token
+                        for your cause. You&apos;ll need to provide campaign details, set a
+                        fundraising goal, and submit it for review.
                       </p>
                     </div>
 
@@ -43,7 +43,7 @@ export default function Help() {
                         How are donations distributed?
                       </h3>
                       <p className="text-gray-600 dark:text-gray-400">
-                        A percentage of each trade goes directly to the campaign's designated
+                        A percentage of each trade goes directly to the campaign&apos;s designated
                         charity wallet. All transactions are recorded on the blockchain for full
                         transparency.
                       </p>
@@ -65,7 +65,7 @@ export default function Help() {
                       </h3>
                       <p className="text-gray-600 dark:text-gray-400">
                         All campaigns go through a verification process. Look for the verified badge
-                        and check the campaign's social media and documentation links.
+                        and check the campaign&apos;s social media and documentation links.
                       </p>
                     </div>
 
@@ -86,7 +86,7 @@ export default function Help() {
                     Need More Help?
                   </h2>
                   <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    Can't find what you're looking for? Reach out to our support team:
+                    Can&apos;t find what you&apos;re looking for? Reach out to our support team:
                   </p>
                   <div className="space-y-2 text-gray-600 dark:text-gray-400">
                     <p>📧 Email: support@niceape.com</p>

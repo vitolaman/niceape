@@ -26,7 +26,7 @@ const PlatformStats = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Platform Impact</h2>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            See the difference we're making together
+            See the difference we&apos;re making together
           </p>
         </div>
 
