@@ -20,32 +20,30 @@ export const Header = () => {
   };
 
   useEffect(() => {
-    console.log(address);
     if (address) {
-      fetch("https://d1-nice-api.vito99varianlaman.workers.dev/api/user", {
-        method: "POST",
+      fetch('https://d1-nice-api.vito99varianlaman.workers.dev/api/user', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ wallet_address: address }),
       })
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Failed to send wallet address");
+            throw new Error('Failed to send wallet address');
           }
           return response.json();
         })
         .then((data) => {
-          console.log("API response:", data);
+          console.log('API response:', data);
           if (data.id) {
-            localStorage.setItem("userId", data.id);
+            localStorage.setItem('userId', data.id);
           }
         })
         .catch((error) => {
-          console.error("Error:", error);
+          console.error('Error:', error);
         });
     }
-
   }, [address]);
 
   // Close dropdown when clicking outside
