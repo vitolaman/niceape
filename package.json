@@ -4,15 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "config:check": "node scripts/check-key-network.js",
-    "config:generate": "node scripts/generate-devnet-config.js"
+    "config:generate": "node scripts/generate-devnet-config.js",
+    "deploy": "npx @cloudflare/next-on-pages"
   },
   "dependencies": {
+    "@cloudflare/next-on-pages": "^1.13.12",
     "@coral-xyz/anchor": "^0.31.0",
     "@iconify-json/ic": "^1.2.2",
     "@iconify-json/ph": "^1.2.2",

@@ -20,7 +20,6 @@ export const Header = () => {
   };
 
   useEffect(() => {
-    console.log(address);
     if (address) {
       fetch("https://d1-nice-api.vito99varianlaman.workers.dev/api/user", {
         method: "POST",
