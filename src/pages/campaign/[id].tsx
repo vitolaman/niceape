@@ -121,7 +121,7 @@ export default function CampaignPage() {
           <div className="py-16 px-4 text-center">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Campaign not found</h1>
             <p className="text-gray-600 dark:text-gray-400 mt-2">
-              The campaign you're looking for doesn't exist.
+              The campaign you&apos;re looking for doesn&apos;t exist.
             </p>
           </div>
         </Page>
