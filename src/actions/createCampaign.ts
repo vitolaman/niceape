@@ -26,6 +26,7 @@ export interface CreateCampaignParams {
   formData: CampaignFormData;
   files: CampaignFiles;
   userWallet: string;
+  charityWallet: string;
   signTransaction: (transaction: Transaction) => Promise<Transaction>;
 }
 
@@ -96,6 +97,7 @@ export async function createCampaign({
   formData,
   files,
   userWallet,
+  charityWallet,
   signTransaction,
 }: CreateCampaignParams): Promise<{
   success: boolean;
@@ -121,13 +123,19 @@ export async function createCampaign({
     }
 
     // Step 3: Call create-campaign API to prepare transaction and upload files
+    // Use the provided charity wallet address instead of the one from form
+    const formDataWithCharityWallet = {
+      ...formData,
+      charity_wallet_address: charityWallet,
+    };
+
     const createResponse = await fetch('/api/create-campaign', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        formData,
+        formData: formDataWithCharityWallet,
         tokenImage: tokenImageBase64,
         campaignImage: campaignImageBase64,
         userWallet,
@@ -173,7 +181,11 @@ export async function createCampaign({
 /**
  * Validation helper for campaign form data
  */
-export function validateCampaignData(formData: CampaignFormData, files: CampaignFiles): string[] {
+export function validateCampaignData(
+  formData: CampaignFormData,
+  files: CampaignFiles,
+  charityWallet?: string
+): string[] {
   const errors: string[] = [];
 
   // Required fields validation
@@ -184,7 +196,11 @@ export function validateCampaignData(formData: CampaignFormData, files: Campaign
     errors.push('Campaign goal must be at least $100');
   }
   if (!formData.category_id) errors.push('Category is required');
-  if (!formData.charity_wallet_address.trim()) errors.push('Charity wallet address is required');
+
+  // Only validate charity wallet if provided separately
+  if (charityWallet && !charityWallet.trim()) {
+    errors.push('Charity wallet address is required');
+  }
 
   // Token validation (required for campaign creation)
   if (!formData.token_name.trim()) errors.push('Token name is required');
