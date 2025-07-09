@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from './ui/button';
 import { useWallet } from '@jup-ag/wallet-adapter';
 import FileDropzone from './ui/FileDropzone';
@@ -14,6 +14,10 @@ import { toast } from 'sonner';
 
 const CreateCampaignForm = () => {
   const { publicKey, signTransaction } = useWallet();
+
+  // Get the current wallet address
+  const walletAddress = useMemo(() => publicKey?.toBase58(), [publicKey]);
+
   const [formData, setFormData] = useState<CampaignFormData>({
     name: '',
     token_name: '',
@@ -81,7 +85,7 @@ const CreateCampaignForm = () => {
     }
 
     // Validate form data
-    const validationErrors = validateCampaignData(formData, files);
+    const validationErrors = validateCampaignData(formData, files, walletAddress);
     if (validationErrors.length > 0) {
       validationErrors.forEach((error) => toast.error(error));
       return;
@@ -94,6 +98,7 @@ const CreateCampaignForm = () => {
         formData,
         files,
         userWallet: publicKey.toBase58(),
+        charityWallet: walletAddress!, // Use wallet address directly, not from form
         signTransaction,
       });
 
@@ -302,12 +307,15 @@ const CreateCampaignForm = () => {
                 <input
                   type="text"
                   name="charity_wallet_address"
-                  value={formData.charity_wallet_address}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-300"
-                  placeholder="Solana wallet address to receive funds"
+                  value={walletAddress || ''}
+                  readOnly
+                  disabled
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 cursor-not-allowed transition-colors duration-300"
+                  placeholder="Connect wallet to auto-fill"
                 />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  This will automatically use your connected wallet address
+                </p>
               </div>
             </div>
 

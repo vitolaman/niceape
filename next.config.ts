@@ -6,8 +6,11 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
 };
 
+// Setup dev platform for Cloudflare Pages during development
 if (process.env.NODE_ENV === 'development') {
-  await setupDevPlatform();
+  (async () => {
+    await setupDevPlatform();
+  })();
 }
 
 export default nextConfig;

@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk';
 
 // Public R2 URL (static)
-const PUBLIC_R2_URL = 'https://pub-85c7f5f0dc104dc784e656b623d999e5.r2.dev';
+const PUBLIC_R2_URL = 'https://r2-storage.niceape.app';
 
 // Function to get environment variables (lazy access)
 function getR2Config() {
