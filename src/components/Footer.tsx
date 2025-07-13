@@ -19,6 +19,14 @@ const Footer = () => {
           </div>
 
           <div className="flex gap-6">
+            <a
+              href="https://x.com/niceapeapp"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              X (Twitter)
+            </a>
             <Link
               href="/about"
               className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"

@@ -22,15 +22,7 @@ const Hero = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left side - Main content */}
             <div className="text-center lg:text-left">
-              <div className="flex justify-center lg:justify-start mb-8">
-                <img
-                  src="/logo.jpg"
-                  alt="NiceApe Logo"
-                  className="w-24 h-24 lg:w-32 lg:h-32 rounded-full object-cover shadow-2xl ring-4 ring-white dark:ring-gray-700"
-                />
-              </div>
-
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
                 <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
                   NiceApe
                 </span>
