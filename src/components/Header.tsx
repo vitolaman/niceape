@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import { useMemo, useState, useRef, useEffect } from 'react';
 import { shortenAddress } from '@/lib/utils';
 import { useTheme } from '@/contexts/ThemeProvider';
+import { workerApi } from '@/lib/worker-api';
 
 export const Header = () => {
   const { setShowModal } = useUnifiedWalletContext();
@@ -21,27 +22,32 @@ export const Header = () => {
 
   useEffect(() => {
     if (address) {
-      fetch('https://d1-nice-api.vito99varianlaman.workers.dev/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ wallet_address: address }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Failed to send wallet address');
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log('API response:', data);
-          if (data.id) {
-            localStorage.setItem('userId', data.id);
+      workerApi
+        .userAuth(address)
+        .then((data: unknown) => {
+          console.log('User authenticated:', data);
+          const response = data as {
+            success: boolean;
+            data: {
+              user: { id: string; walletAddress: string; displayName?: string };
+              isNewUser: boolean;
+              message: string;
+            };
+          };
+
+          if (response.success && response.data.user.id) {
+            localStorage.setItem('userId', response.data.user.id);
+            localStorage.setItem('userWallet', response.data.user.walletAddress);
+            console.log(response.data.message);
+            if (response.data.isNewUser) {
+              console.log('Welcome! New user created.');
+            } else {
+              console.log('Welcome back!');
+            }
           }
         })
         .catch((error) => {
-          console.error('Error:', error);
+          console.error('Authentication error:', error);
         });
     }
   }, [address]);

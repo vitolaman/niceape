@@ -1,4 +1,6 @@
 import { Transaction } from '@solana/web3.js';
+import { workerApi } from '@/lib/worker-api';
+import { CampaignStatus } from '@/constants';
 
 export interface CampaignFormData {
   name: string;
@@ -46,47 +48,28 @@ async function fileToBase64(file: File): Promise<string> {
  * Send signed transaction to blockchain
  */
 async function sendSignedTransaction(signedTransaction: Transaction): Promise<string> {
-  const sendResponse = await fetch('/api/send-transaction', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
+  try {
+    const result = await workerApi.sendTransaction({
       signedTransaction: signedTransaction.serialize().toString('base64'),
-    }),
-  });
+    });
 
-  if (!sendResponse.ok) {
-    const error = await sendResponse.json();
-    throw new Error(error.error || 'Failed to send transaction');
+    return result.signature || 'transaction_sent';
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Failed to send transaction');
   }
-
-  const { success, signature } = await sendResponse.json();
-  if (!success) {
-    throw new Error('Transaction failed');
-  }
-
-  return signature || 'transaction_sent';
 }
 
 /**
- * Finalize campaign by saving to database
+ * Finalize campaign - either with success status and transaction signature, or failed status
  */
-async function finalizeCampaign(campaignData: any, transactionSignature: string): Promise<void> {
-  const response = await fetch('/api/finalize-campaign', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
+async function finalizeCampaign(campaignData: any, transactionSignature?: string): Promise<void> {
+  try {
+    await workerApi.finalizeCampaign({
       campaignData,
-      transactionSignature,
-    }),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to finalize campaign');
+      transactionSignature: transactionSignature || '',
+    });
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Failed to finalize campaign');
   }
 }
 
@@ -123,44 +106,38 @@ export async function createCampaign({
     }
 
     // Step 3: Call create-campaign API to prepare transaction and upload files
-    // Use the provided charity wallet address instead of the one from form
+    // This will also save the campaign with DRAFTED status
     const formDataWithCharityWallet = {
       ...formData,
       charity_wallet_address: charityWallet,
     };
 
-    const createResponse = await fetch('/api/create-campaign', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        formData: formDataWithCharityWallet,
-        tokenImage: tokenImageBase64,
-        campaignImage: campaignImageBase64,
-        userWallet,
-        userId,
-      }),
+    const createResult = await workerApi.createCampaignFlow({
+      formData: formDataWithCharityWallet,
+      tokenImage: tokenImageBase64,
+      campaignImage: campaignImageBase64,
+      userWallet,
+      userId,
     });
 
-    if (!createResponse.ok) {
-      const error = await createResponse.json();
-      throw new Error(error.error || 'Failed to create campaign');
-    }
+    const { tokenMint, unsignedTransaction, campaignData } = createResult;
 
-    const { tokenMint, unsignedTransaction, campaignData } = await createResponse.json();
-
-    // Step 3: Deserialize and sign the transaction
-    const transactionBuffer = Buffer.from(unsignedTransaction, 'base64');
-    const transaction = Transaction.from(transactionBuffer);
-
+    // Step 4: Deserialize and sign the transaction
+    const transaction = Transaction.from(Buffer.from(unsignedTransaction, 'base64'));
     const signedTransaction = await signTransaction(transaction);
 
-    // Step 4: Send the signed transaction
-    const transactionSignature = await sendSignedTransaction(signedTransaction);
+    // Step 5: Send the signed transaction
+    let transactionSignature: string;
+    try {
+      transactionSignature = await sendSignedTransaction(signedTransaction);
 
-    // Step 5: Finalize campaign by saving to database
-    await finalizeCampaign(campaignData, transactionSignature);
+      // Step 6: Finalize campaign with SUCCESS status
+      await finalizeCampaign(campaignData, transactionSignature);
+    } catch (transactionError) {
+      // If transaction fails, finalize campaign with FAILED status
+      await finalizeCampaign(campaignData);
+      throw transactionError;
+    }
 
     // Return success result
     return {
@@ -171,6 +148,7 @@ export async function createCampaign({
     };
   } catch (error) {
     console.error('Error in createCampaign:', error);
+
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred',

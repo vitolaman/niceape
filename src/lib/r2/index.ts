@@ -1,7 +1,10 @@
 import AWS from 'aws-sdk';
 
-// Public R2 URL (static)
-const PUBLIC_R2_URL = 'https://r2-storage.niceape.app';
+// Public R2 URLs based on environment
+function getPublicR2URL(): string {
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  return isDevelopment ? 'https://r2-storage-dev.niceape.app' : 'https://r2-storage.niceape.app';
+}
 
 // Function to get environment variables (lazy access)
 function getR2Config() {
@@ -90,7 +93,7 @@ export async function uploadFileToR2(
 
   try {
     await uploadToR2(fileBuffer, file.type, fileName);
-    return `${PUBLIC_R2_URL}/${fileName}`;
+    return `${getPublicR2URL()}/${fileName}`;
   } catch (error) {
     console.error(`Error uploading file to ${folderPath}:`, error);
     throw new Error(`Failed to upload file to ${folderPath}`);
@@ -121,7 +124,7 @@ export async function uploadBase64ImageToR2(
 
   try {
     await uploadToR2(fileBuffer, contentType, fileName);
-    return `${PUBLIC_R2_URL}/${fileName}`;
+    return `${getPublicR2URL()}/${fileName}`;
   } catch (error) {
     console.error(`Error uploading base64 image to ${folderPath}:`, error);
     throw new Error(`Failed to upload base64 image to ${folderPath}`);
@@ -141,15 +144,15 @@ export async function uploadMetadataToR2(
 
   try {
     await uploadToR2(metadataBuffer, 'application/json', fullFileName);
-    return `${PUBLIC_R2_URL}/${fullFileName}`;
+    return `${getPublicR2URL()}/${fullFileName}`;
   } catch (error) {
     console.error(`Error uploading metadata to ${folderPath}:`, error);
     throw new Error(`Failed to upload metadata to ${folderPath}`);
   }
 }
 
-// Export constants and functions for external use
-export { PUBLIC_R2_URL };
+// Export function to get R2 URL based on environment
+export { getPublicR2URL };
 
 // Export function to get R2 bucket name
 export function getR2Bucket(): string {

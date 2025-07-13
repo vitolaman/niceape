@@ -95,5 +95,5 @@ try {
 
 ## Constants
 
-- `PUBLIC_R2_URL` - Public URL for accessing uploaded files
+- `getPublicR2URL()` - Function that returns the public R2 URL based on environment (dev/prod)
 - `R2_BUCKET` - Bucket name (for advanced usage)
