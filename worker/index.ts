@@ -6,6 +6,7 @@ import './lib/polyfills.js';
 import { Env } from './types';
 import { UserService } from './api/users';
 import { CampaignService } from './api/campaigns';
+import { CampaignJupiterService } from './api/campaigns-with-jupiter';
 import { MasterCategoryService } from './api/categories';
 
 // Import new API controllers
@@ -59,6 +60,7 @@ export default {
       // Initialize services
       const userService = new UserService(env);
       const campaignService = new CampaignService(env);
+      const campaignJupiterService = new CampaignJupiterService(env);
       const categoryService = new MasterCategoryService(env);
 
       // Initialize new API controllers
@@ -145,6 +147,24 @@ export default {
           return jsonResponse(campaigns);
         }
 
+        // Campaigns with Jupiter data endpoint
+        if (path === '/api/campaigns/with-jupiter' && method === 'GET') {
+          const campaigns = await campaignJupiterService.getCampaignsWithJupiterData();
+          return jsonResponse(campaigns);
+        }
+
+        // Individual campaign with Jupiter data endpoint
+        if (
+          path.startsWith('/api/campaigns/') &&
+          path.endsWith('/with-jupiter') &&
+          method === 'GET'
+        ) {
+          const campaignId = path.split('/')[3];
+          const campaign = await campaignJupiterService.getCampaignWithJupiterData(campaignId);
+          if (!campaign) return errorResponse('Campaign not found', 404);
+          return jsonResponse(campaign);
+        }
+
         if (path === '/api/campaigns' && method === 'POST') {
           const body = (await request.json()) as any;
           const campaign = await campaignService.createCampaign(body);
@@ -211,6 +231,7 @@ export default {
           'user-auth': '/api/user-auth',
           categories: '/api/categories',
           campaigns: '/api/campaigns',
+          'campaigns-with-jupiter': '/api/campaigns/with-jupiter',
           health: '/api/health',
           // New structured endpoints
           'create-campaign': '/api/create-campaign',

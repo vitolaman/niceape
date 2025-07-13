@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { Button } from './ui/button';
 
 interface Campaign {
   id: number;
@@ -11,9 +10,9 @@ interface Campaign {
   goal: number;
   raised: number;
   trades: number;
-  price: number;
   volume24h: number;
   category: string;
+  tokenMint: string;
 }
 
 interface CampaignCardProps {
@@ -32,84 +31,66 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign }) => {
     }).format(amount);
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 4,
-    }).format(price);
-  };
-
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300">
-      {/* Campaign Image */}
-      <div className="relative h-48">
-        <img src={campaign.image} alt={campaign.name} className="w-full h-full object-cover" />
-        <div className="absolute top-4 left-4">
-          <span className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-800 dark:text-gray-200">
-            {campaign.category} ${campaign.symbol}
-          </span>
-        </div>
-      </div>
-
-      {/* Campaign Content */}
-      <div className="p-6">
-        <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{campaign.name}</h4>
-
-        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
-          {campaign.description}
-        </p>
-
-        {/* Progress Bar */}
-        <div className="mb-4">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Goal: {formatCurrency(campaign.goal)}
-            </span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              {Math.round(progressPercentage)}%
+    <Link href={`/campaign/${campaign.tokenMint}`} className="block">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer">
+        {/* Campaign Image */}
+        <div className="relative h-48">
+          <img src={campaign.image} alt={campaign.name} className="w-full h-full object-cover" />
+          <div className="absolute top-4 left-4">
+            <span className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-800 dark:text-gray-200">
+              {campaign.category} ${campaign.symbol}
             </span>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-            <div
-              className="bg-green-600 dark:bg-green-500 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${Math.min(progressPercentage, 100)}%` }}
-            ></div>
-          </div>
-          <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            {formatCurrency(campaign.raised)} raised
-          </div>
         </div>
 
-        {/* Campaign Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-4 text-center">
-          <div>
-            <div className="text-lg font-bold text-gray-900 dark:text-white">{campaign.trades}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">trades</div>
-          </div>
-          <div>
-            <div className="text-lg font-bold text-gray-900 dark:text-white">
-              {formatPrice(campaign.price)}
+        {/* Campaign Content */}
+        <div className="p-6">
+          <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{campaign.name}</h4>
+
+          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+            {campaign.description}
+          </p>
+
+          {/* Progress Bar */}
+          <div className="mb-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Goal: {formatCurrency(campaign.goal)}
+              </span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                {Math.round(progressPercentage)}%
+              </span>
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">price</div>
-          </div>
-          <div>
-            <div className="text-lg font-bold text-gray-900 dark:text-white">
-              {formatCurrency(campaign.volume24h)}
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+              <div
+                className="bg-green-600 dark:bg-green-500 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${Math.min(progressPercentage, 100)}%` }}
+              ></div>
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">24h volume</div>
+            <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+              {formatCurrency(campaign.raised)} raised
+            </div>
+          </div>
+
+          {/* Campaign Stats */}
+          <div className="grid grid-cols-2 gap-4 mb-4 text-center">
+            <div>
+              <div className="text-lg font-bold text-gray-900 dark:text-white">
+                {campaign.trades}
+              </div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">trades</div>
+            </div>
+            <div>
+              <div className="text-lg font-bold text-gray-900 dark:text-white">
+                {formatCurrency(campaign.volume24h)}
+              </div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">24h volume</div>
+            </div>
           </div>
         </div>
-
-        {/* Trade Button */}
-        <Link href={`/campaign/${campaign.id}`}>
-          <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg">
-            Trade ${campaign.symbol}
-          </Button>
-        </Link>
       </div>
-    </div>
+    </Link>
   );
 };
 

@@ -1,6 +1,5 @@
 import { Transaction } from '@solana/web3.js';
 import { workerApi } from '@/lib/worker-api';
-import { CampaignStatus } from '@/constants';
 
 export interface CampaignFormData {
   name: string;
