@@ -140,6 +140,11 @@ class WorkerApiClient {
     });
   }
 
+  // Category API methods
+  async getCategories() {
+    return this.request('/api/categories');
+  }
+
   // Pool API methods
   async getPools() {
     return this.request('/api/pools');
