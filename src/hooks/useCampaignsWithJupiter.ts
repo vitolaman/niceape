@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { getApiUrl } from '../lib/worker-api';
 
 interface CampaignWithJupiterData {
   id: string;
@@ -35,8 +36,7 @@ interface CampaignWithJupiterData {
 }
 
 async function fetchCampaignsWithJupiter(): Promise<CampaignWithJupiterData[]> {
-  // You'll need to replace this with your actual worker URL
-  const workerUrl = process.env.NEXT_PUBLIC_WORKER_URL || 'http://localhost:8787';
+  const workerUrl = getApiUrl() || 'http://localhost:8787';
 
   const response = await fetch(`${workerUrl}/api/campaigns/with-jupiter`);
 
