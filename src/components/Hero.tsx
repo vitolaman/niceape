@@ -52,28 +52,6 @@ const Hero = () => {
                 Trade nice, ape big! 🦍💚
               </p>
 
-              {/* Stats Preview */}
-              <div className="grid grid-cols-3 gap-4 mb-10">
-                <div className="text-center">
-                  <div className="text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400">
-                    $15K+
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Donated</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
-                    4
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Active Causes</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl md:text-3xl font-bold text-purple-600 dark:text-purple-400">
-                    4K+
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Trades</div>
-                </div>
-              </div>
-
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 {publicKey ? (

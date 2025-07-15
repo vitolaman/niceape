@@ -14,7 +14,7 @@ export default function Index() {
       <Page>
         <Hero />
         <ActiveCampaigns />
-        <PlatformStats />
+        {/* <PlatformStats /> */}
       </Page>
     </>
   );

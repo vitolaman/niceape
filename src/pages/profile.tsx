@@ -336,27 +336,6 @@ export default function Profile() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="font-medium">Push Notifications</h4>
-                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Get notified about trades and campaigns
-                  </p>
-                </div>
-                <button
-                  onClick={() => setPushNotifications(!pushNotifications)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    pushNotifications ? 'bg-green-600' : isDarkMode ? 'bg-gray-600' : 'bg-gray-300'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      pushNotifications ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
                   <h4 className="font-medium">Dark Mode</h4>
                   <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Switch to dark theme
