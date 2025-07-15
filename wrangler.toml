@@ -6,7 +6,7 @@ compatibility_flags = ["nodejs_compat"]
 # R2 Bucket Configuration for Development
 [[r2_buckets]]
 binding = "R2_BUCKET"
-bucket_name = "niceape"
+bucket_name = "niceape-dev"
 preview_bucket_name = "niceape-dev"
 
 # D1 Database Configuration for Development (uses remote DB)
