@@ -153,18 +153,6 @@ export default {
           return jsonResponse(campaigns);
         }
 
-        // Individual campaign with Jupiter data endpoint
-        if (
-          path.startsWith('/api/campaigns/') &&
-          path.endsWith('/with-jupiter') &&
-          method === 'GET'
-        ) {
-          const campaignId = path.split('/')[3];
-          const campaign = await campaignJupiterService.getCampaignWithJupiterData(campaignId);
-          if (!campaign) return errorResponse('Campaign not found', 404);
-          return jsonResponse(campaign);
-        }
-
         if (path === '/api/campaigns' && method === 'POST') {
           const body = (await request.json()) as any;
           const campaign = await campaignService.createCampaign(body);

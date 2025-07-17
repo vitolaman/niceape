@@ -79,10 +79,11 @@ const ActiveCampaigns = () => {
                     'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&h=200&fit=crop',
                   goal: campaign.campaignGoal || 0,
                   raised: campaign.raisedValue || 0,
-                  trades: campaign.jupiterData?.trades || 0,
+                  trades24h: campaign.jupiterData?.trades || 0,
                   volume24h: campaign.jupiterData?.volume24h || 0,
                   category: campaign.categoryName || 'General',
                   tokenMint: campaign.tokenMint || '',
+                  mcap: campaign.jupiterData?.mcap || 0,
                 }}
               />
             ))}
