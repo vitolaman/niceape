@@ -11,6 +11,7 @@ import {
 } from '@/actions/createCampaign';
 import { fetchCategories, type Category } from '@/lib/services';
 import { toast } from 'sonner';
+import { generateCodeChallenge, generateCodeVerifier } from '@/lib/utils';
 
 const CreateCampaignForm = () => {
   const { publicKey, signTransaction } = useWallet();
@@ -42,6 +43,7 @@ const CreateCampaignForm = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isXConnected, setIsXConnected] = useState(false);
   const [campaignCreated, setCampaignCreated] = useState(false);
   const [campaignResult, setCampaignResult] = useState<{
     tokenMint?: string;
@@ -70,6 +72,50 @@ const CreateCampaignForm = () => {
     };
 
     loadCategories();
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+
+    if (!code) return;
+
+    const verifier = localStorage.getItem('x_code_verifier');
+    if (!verifier) {
+      toast.error('No verifier found');
+      return;
+    }
+
+    const fetchTwitterProfile = async () => {
+      try {
+        const res = await fetch('/api/twitter-callback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            code,
+            verifier,
+          }),
+        });
+
+        if (!res.ok) throw new Error('Twitter login failed');
+        console.log(res);
+        const data: any = await res.json();
+        console.log('Twitter User:', data.user.data.username);
+
+        // Optional: Set formData.x_handle = data.user.username
+        setFormData((prev) => ({
+          ...prev,
+          x_handle: `@${data.user.data.username}`,
+        }));
+
+        setIsXConnected(true);
+        toast.success(`Connected to @${data.user.data.username}`);
+      } catch (error: any) {
+        toast.error(error.message || 'Failed to connect Twitter');
+      }
+    };
+
+    fetchTwitterProfile();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -344,14 +390,47 @@ const CreateCampaignForm = () => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     X (Twitter) Handle
                   </label>
-                  <input
-                    type="text"
-                    name="x_handle"
-                    value={formData.x_handle}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-300"
-                    placeholder="@yourusername"
-                  />
+
+                  {!isXConnected ? (
+                    <Button
+                      className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-1 rounded-lg text-lg"
+                      type="button"
+                      onClick={async () => {
+                        const codeVerifier = generateCodeVerifier(); // Use PKCE
+                        localStorage.setItem('x_code_verifier', codeVerifier); // Store for later
+                        const codeChallenge = await generateCodeChallenge(codeVerifier);
+
+                        const oauthUrl = new URL('https://twitter.com/i/oauth2/authorize');
+                        oauthUrl.searchParams.set('response_type', 'code');
+                        oauthUrl.searchParams.set(
+                          'client_id',
+                          'NEVOM3hRNmRiaU5Cb3BnRm9aWG86MTpjaQ'
+                        );
+                        oauthUrl.searchParams.set(
+                          'redirect_uri',
+                          'http://localhost:3000/create-campaign'
+                        );
+                        oauthUrl.searchParams.set('scope', 'tweet.read users.read offline.access');
+                        oauthUrl.searchParams.set('state', 'YOUR_RANDOM_STATE');
+                        oauthUrl.searchParams.set('code_challenge', codeChallenge);
+                        oauthUrl.searchParams.set('code_challenge_method', 'S256');
+
+                        window.location.href = oauthUrl.toString();
+                      }}
+                    >
+                      Connect to X
+                    </Button>
+                  ) : (
+                    <input
+                      disabled
+                      type="text"
+                      name="x_handle"
+                      value={formData.x_handle}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-300"
+                      placeholder="@yourusername"
+                    />
+                  )}
                 </div>
               </div>
 
@@ -423,17 +502,25 @@ const CampaignCreationSuccess = ({ result }: { result: any }) => {
             {result.tokenMint && (
               <div>
                 <span className="font-medium text-gray-700 dark:text-gray-300">Token Mint: </span>
-                <span className="font-mono text-green-600 dark:text-green-400 break-all">
+                <a
+                  href={`https://solscan.io/token/${result.tokenMint}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-green-600 dark:text-green-400 break-all"
+                >
                   {result.tokenMint}
-                </span>
+                </a>
               </div>
             )}
             {result.transactionSignature && (
               <div>
                 <span className="font-medium text-gray-700 dark:text-gray-300">Transaction: </span>
-                <span className="font-mono text-blue-600 dark:text-blue-400 break-all">
+                <a
+                  href={`https://solscan.io/tx/${result.transactionSignature}`}
+                  className="font-mono text-blue-600 dark:text-blue-400 break-all"
+                >
                   {result.transactionSignature}
-                </span>
+                </a>
               </div>
             )}
           </div>

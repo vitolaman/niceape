@@ -98,3 +98,26 @@ export function getPoolConfigKeys(): string[] {
 
   return finalKey ? finalKey.split(',') : [];
 }
+
+export function generateCodeVerifier(length = 64) {
+  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+  let verifier = '';
+  for (let i = 0; i < length; i++) {
+    verifier += charset.charAt(Math.floor(Math.random() * charset.length));
+  }
+  return verifier;
+}
+
+export async function generateCodeChallenge(verifier: string) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(verifier);
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+}
+
+export function base64URLEncode(buffer: Buffer): string {
+  return buffer.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''); // Remove padding
+}

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { formatReadableNumber } from '../lib/format/number';
 
 interface Campaign {
-  id: number;
+  id: string;
   name: string;
   symbol: string;
   description: string;
@@ -25,7 +25,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign }) => {
   const progressPercentage = (campaign.raised / campaign.goal) * 100;
 
   return (
-    <Link href={`/campaign/${campaign.tokenMint}`} className="block">
+    <Link href={`/campaign/${campaign.id}`} className="block">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer">
         {/* Campaign Image */}
         <div className="relative h-48">

@@ -3,100 +3,63 @@ import Head from 'next/head';
 import Page from '@/components/ui/Page/Page';
 import TradingInterface from '@/components/TradingInterface';
 import { useState, useEffect } from 'react';
+import TokenPriceChart from '@/components/PriceChart';
 
 interface Campaign {
-  id: number;
+  id: string;
   name: string;
-  symbol: string;
-  description: string;
-  image: string;
-  goal: number;
-  raised: number;
-  trades: number;
-  price: number;
-  volume24h: number;
-  category: string;
-  longDescription?: string;
-  website?: string;
-  twitter?: string;
-  telegram?: string;
+  bannerUrl: string;
+  imageUrl: string;
+  tokenName: string;
+  tokenTicker: string;
+  categoryId: string;
+  tokenImageUrl: string;
+  websiteUrl: string;
+  xHandle: string;
+  telegramHandle: string;
+  campaignGoal: number;
+  charityWalletAddress: string;
+  raisedValue: number;
+  shortDescription: string;
+  longDescription: string;
+  status: string;
+  tokenMint: string;
+  transactionSignature: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-// Mock data - in a real app, this would come from your API/blockchain
-const mockCampaigns: Campaign[] = [
-  {
-    id: 1,
-    name: 'Clean Water Drive',
-    symbol: 'WTR',
-    description: 'Providing clean water access to communities in need across rural Africa',
-    longDescription:
-      'Our mission is to provide clean, safe drinking water to communities in rural Africa. We work with local partners to drill wells, install water purification systems, and educate communities about water safety and hygiene practices. Every dollar raised goes directly to these life-saving projects.',
-    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&h=400&fit=crop',
-    goal: 5000,
-    raised: 2500,
-    trades: 1247,
-    price: 0.052,
-    volume24h: 15000,
-    category: 'Water',
-    website: 'https://cleanwaterproject.org',
-    twitter: 'https://twitter.com/cleanwaterproj',
-    telegram: 'https://t.me/cleanwaterproject',
-  },
-  {
-    id: 2,
-    name: 'Feed the Hungry',
-    symbol: 'FD',
-    description:
-      'Fighting hunger by providing meals to families and children in underserved communities',
-    longDescription:
-      'We partner with local food banks and kitchens to provide nutritious meals to families in need. Our programs focus on both immediate hunger relief and long-term food security through education and community gardens.',
-    image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&h=400&fit=crop',
-    goal: 10000,
-    raised: 4200,
-    trades: 892,
-    price: 0.122,
-    volume24h: 22000,
-    category: 'Food',
-    website: 'https://feedthehungry.org',
-    twitter: 'https://twitter.com/feedhungry',
-    telegram: 'https://t.me/feedthehungry',
-  },
-  {
-    id: 3,
-    name: 'Education for All',
-    symbol: 'EDU',
-    description: 'Supporting education initiatives and school supplies for children worldwide',
-    longDescription:
-      'Education is the key to breaking the cycle of poverty. We provide school supplies, books, and educational resources to children in underserved communities around the world. We also support teacher training and school infrastructure development.',
-    image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop',
-    goal: 7500,
-    raised: 1800,
-    trades: 456,
-    price: 0.032,
-    volume24h: 8500,
-    category: 'Education',
-    website: 'https://educationforall.org',
-    twitter: 'https://twitter.com/edu4all',
-    telegram: 'https://t.me/educationforall',
-  },
-  {
-    id: 4,
-    name: 'Plant Trees Initiative',
-    symbol: 'TRI',
-    description: 'Reforestation efforts to combat climate change and restore natural habitats',
-    longDescription:
-      'Climate change is one of the most pressing challenges of our time. We organize tree planting events, support reforestation projects, and educate communities about environmental conservation. Each tree planted helps combat climate change and restore natural habitats.',
-    image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop',
-    goal: 3000,
-    raised: 2400,
-    trades: 1634,
-    price: 0.082,
-    volume24h: 12000,
-    category: 'Environment',
-    website: 'https://planttrees.org',
-    twitter: 'https://twitter.com/planttrees',
-    telegram: 'https://t.me/planttrees',
-  },
+const dummyData = [
+  { time: '2025-06-19', price: 1.02 },
+  { time: '2025-06-20', price: 1.08 },
+  { time: '2025-06-21', price: 1.12 },
+  { time: '2025-06-22', price: 1.1 },
+  { time: '2025-06-23', price: 1.09 },
+  { time: '2025-06-24', price: 1.13 },
+  { time: '2025-06-25', price: 1.15 },
+  { time: '2025-06-26', price: 1.17 },
+  { time: '2025-06-27', price: 1.14 },
+  { time: '2025-06-28', price: 1.18 },
+  { time: '2025-06-29', price: 1.22 },
+  { time: '2025-06-30', price: 1.24 },
+  { time: '2025-07-01', price: 1.26 },
+  { time: '2025-07-02', price: 1.21 },
+  { time: '2025-07-03', price: 1.19 },
+  { time: '2025-07-04', price: 1.25 },
+  { time: '2025-07-05', price: 1.27 },
+  { time: '2025-07-06', price: 1.3 },
+  { time: '2025-07-07', price: 1.33 },
+  { time: '2025-07-08', price: 1.35 },
+  { time: '2025-07-09', price: 1.38 },
+  { time: '2025-07-10', price: 1.42 },
+  { time: '2025-07-11', price: 1.4 },
+  { time: '2025-07-12', price: 1.37 },
+  { time: '2025-07-13', price: 1.39 },
+  { time: '2025-07-14', price: 1.41 },
+  { time: '2025-07-15', price: 1.45 },
+  { time: '2025-07-16', price: 1.48 },
+  { time: '2025-07-17', price: 1.5 },
+  { time: '2025-07-18', price: 1.52 },
 ];
 
 export default function CampaignPage() {
@@ -105,10 +68,19 @@ export default function CampaignPage() {
   const [campaign, setCampaign] = useState<Campaign | null>(null);
 
   useEffect(() => {
-    if (id) {
-      const foundCampaign = mockCampaigns.find((c) => c.id === parseInt(id as string));
-      setCampaign(foundCampaign || null);
-    }
+    if (!id || Array.isArray(id)) return;
+
+    const fetchCampaign = async () => {
+      try {
+        const res = await fetch(`http://localhost:8787/api/campaigns/${id}`);
+        const data: Campaign = await res.json();
+        setCampaign(data);
+      } catch (error) {
+        console.error('Failed to fetch campaign:', error);
+      }
+    };
+
+    fetchCampaign();
   }, [id]);
 
   if (!campaign) {
@@ -129,7 +101,7 @@ export default function CampaignPage() {
     );
   }
 
-  const progressPercentage = (campaign.raised / campaign.goal) * 100;
+  const progressPercentage = (campaign.raisedValue / campaign.campaignGoal) * 100;
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -153,7 +125,7 @@ export default function CampaignPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div>
                   <img
-                    src={campaign.image}
+                    src={campaign.imageUrl}
                     alt={campaign.name}
                     className="w-full h-64 object-cover rounded-lg"
                   />
@@ -161,10 +133,10 @@ export default function CampaignPage() {
                 <div>
                   <div className="flex items-center gap-2 mb-4">
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                      {campaign.category}
+                      {campaign.categoryId}
                     </span>
                     <span className="text-lg font-bold text-gray-900 dark:text-white">
-                      ${campaign.symbol}
+                      ${campaign.tokenTicker}
                     </span>
                   </div>
 
@@ -172,13 +144,13 @@ export default function CampaignPage() {
                     {campaign.name}
                   </h1>
 
-                  <p className="text-gray-600 mb-6">{campaign.description}</p>
+                  <p className="text-gray-600 mb-6">{campaign.longDescription}</p>
 
                   {/* Progress Bar */}
                   <div className="mb-6">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm font-medium text-gray-700">
-                        Goal: {formatCurrency(campaign.goal)}
+                        Goal: {formatCurrency(campaign.campaignGoal)}
                       </span>
                       <span className="text-sm text-gray-500">
                         {Math.round(progressPercentage)}%
@@ -191,12 +163,12 @@ export default function CampaignPage() {
                       ></div>
                     </div>
                     <div className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">
-                      {formatCurrency(campaign.raised)} raised
+                      {formatCurrency(campaign.raisedValue)} raised
                     </div>
                   </div>
 
                   {/* Campaign Stats */}
-                  <div className="grid grid-cols-3 gap-4 mb-6">
+                  {/* <div className="grid grid-cols-3 gap-4 mb-6">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-gray-900 dark:text-white">
                         {campaign.trades}
@@ -215,13 +187,13 @@ export default function CampaignPage() {
                       </div>
                       <div className="text-sm text-gray-500 dark:text-gray-400">24h volume</div>
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Social Links */}
                   <div className="flex gap-4">
-                    {campaign.website && (
+                    {campaign.websiteUrl && (
                       <a
-                        href={campaign.website}
+                        href={campaign.websiteUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:text-blue-800 transition-colors"
@@ -229,9 +201,9 @@ export default function CampaignPage() {
                         🌐 Website
                       </a>
                     )}
-                    {campaign.twitter && (
+                    {campaign.xHandle && (
                       <a
-                        href={campaign.twitter}
+                        href={campaign.xHandle}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-400 hover:text-blue-600 transition-colors"
@@ -239,9 +211,9 @@ export default function CampaignPage() {
                         🐦 Twitter
                       </a>
                     )}
-                    {campaign.telegram && (
+                    {campaign.telegramHandle && (
                       <a
-                        href={campaign.telegram}
+                        href={campaign.telegramHandle}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-500 hover:text-blue-700 transition-colors"
@@ -259,6 +231,8 @@ export default function CampaignPage() {
               {/* Campaign Details */}
               <div className="lg:col-span-2">
                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                  <TokenPriceChart data={dummyData} />
+
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                     About This Campaign
                   </h2>
@@ -271,9 +245,9 @@ export default function CampaignPage() {
               {/* Trading Interface */}
               <div className="lg:col-span-1">
                 <TradingInterface
-                  campaignSymbol={campaign.symbol}
+                  campaignSymbol={campaign.tokenTicker}
                   campaignName={campaign.name}
-                  currentPrice={campaign.price}
+                  currentPrice={1}
                 />
               </div>
             </div>

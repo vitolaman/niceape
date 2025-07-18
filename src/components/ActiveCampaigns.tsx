@@ -69,7 +69,7 @@ const ActiveCampaigns = () => {
               <CampaignCard
                 key={campaign.id}
                 campaign={{
-                  id: parseInt(campaign.id),
+                  id: campaign.id,
                   name: campaign.name || 'Untitled Campaign',
                   symbol: campaign.tokenTicker || 'N/A',
                   description: campaign.shortDescription || 'No description available',
