@@ -21,7 +21,7 @@ const Page: React.FC<React.PropsWithChildren<IProps>> = ({
     >
       <Header />
       <main className={cn('flex flex-1 flex-col items-center px-1 md:px-3', containerClassName)}>
-        <div className="lg:max-w-7xl w-full">{children}</div>
+        <div className="w-full">{children}</div>
       </main>
       <Footer />
     </div>
