@@ -26,30 +26,30 @@ export default function Profile() {
     mealsfunded: 125,
   });
 
-  const [achievements] = useState([
-    { id: 1, name: 'NiceApe Hero', description: 'Traded over $1000', icon: '🦍', earned: true },
-    { id: 2, name: 'First Trade', description: 'Completed first trade', icon: '🎯', earned: true },
-    {
-      id: 3,
-      name: 'Generous Ape',
-      description: 'Generated $50+ in charity fees',
-      icon: '💚',
-      earned: true,
-    },
-    {
-      id: 4,
-      name: 'Community Leader',
-      description: 'Launched a campaign',
-      icon: '⭐',
-      earned: false,
-    },
-  ]);
+  // const [achievements] = useState([
+  //   { id: 1, name: 'NiceApe Hero', description: 'Traded over $1000', icon: '🦍', earned: true },
+  //   { id: 2, name: 'First Trade', description: 'Completed first trade', icon: '🎯', earned: true },
+  //   {
+  //     id: 3,
+  //     name: 'Generous Ape',
+  //     description: 'Generated $50+ in charity fees',
+  //     icon: '💚',
+  //     earned: true,
+  //   },
+  //   {
+  //     id: 4,
+  //     name: 'Community Leader',
+  //     description: 'Launched a campaign',
+  //     icon: '⭐',
+  //     earned: false,
+  //   },
+  // ]);
 
-  const [recentActivity] = useState([
-    { action: 'Bought WATER', amount: '$50', donated: '+$0.25 donated', time: '2 hours ago' },
-    { action: 'Sold FOOD', amount: '$75', donated: '+$0.38 donated', time: '1 day ago' },
-    { action: 'Bought TREE', amount: '$100', donated: '+$0.50 donated', time: '3 days ago' },
-  ]);
+  // const [recentActivity] = useState([
+  //   { action: 'Bought WATER', amount: '$50', donated: '+$0.25 donated', time: '2 hours ago' },
+  //   { action: 'Sold FOOD', amount: '$75', donated: '+$0.38 donated', time: '1 day ago' },
+  //   { action: 'Bought TREE', amount: '$100', donated: '+$0.50 donated', time: '3 days ago' },
+  // ]);
 
   const address = publicKey?.toBase58();
 
@@ -58,8 +58,8 @@ export default function Profile() {
     // In real app, save to backend
   };
 
-  const handleDisconnectWallet = () => {
-    disconnect();
+  const handleDisconnectWallet = async () => {
+    await disconnect();
     // Redirect to home or login page
     window.location.href = '/';
   };
@@ -102,7 +102,6 @@ export default function Profile() {
               {isEditing ? 'Save' : 'Edit'}
             </button>
           </div>
-
           {/* Profile Section */}
           <div
             className={`rounded-xl p-6 mb-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}
@@ -176,7 +175,6 @@ export default function Profile() {
               )}
             </div>
           </div>
-
           {/* Connected Wallet */}
           {address && (
             <div
@@ -253,9 +251,8 @@ export default function Profile() {
               </div>
             </div>
           )}
-
           {/* Achievements */}
-          <div
+          {/* <div
             className={`rounded-xl p-6 mb-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}
           >
             <div className="flex items-center gap-2 mb-4">
@@ -291,10 +288,9 @@ export default function Profile() {
                 </div>
               ))}
             </div>
-          </div>
-
+          </div> */}
           {/* Recent Activity */}
-          <div
+          {/* <div
             className={`rounded-xl p-6 mb-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}
           >
             <div className="flex items-center gap-2 mb-4">
@@ -322,8 +318,7 @@ export default function Profile() {
                 </div>
               ))}
             </div>
-          </div>
-
+          </div> */}
           {/* Settings */}
           <div
             className={`rounded-xl p-6 mb-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}

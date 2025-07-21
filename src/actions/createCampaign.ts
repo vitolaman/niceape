@@ -1,4 +1,4 @@
-import { Transaction } from '@solana/web3.js';
+import { Keypair, Transaction } from '@solana/web3.js';
 import { workerApi } from '@/lib/worker-api';
 
 export interface CampaignFormData {
@@ -104,15 +104,19 @@ export async function createCampaign({
       campaignImageBase64 = await fileToBase64(files.campaignImage);
     }
 
+    // Generate keypair for the token
+    const keyPair = Keypair.generate();
+
     // Step 3: Call create-campaign API to prepare transaction and upload files
     // This will also save the campaign with DRAFTED status
-    const formDataWithCharityWallet = {
+    const formDataWithAdditionalData = {
       ...formData,
       charity_wallet_address: charityWallet,
+      mint: keyPair.publicKey.toBase58(),
     };
 
     const createResult = await workerApi.createCampaignFlow({
-      formData: formDataWithCharityWallet,
+      formData: formDataWithAdditionalData,
       tokenImage: tokenImageBase64,
       campaignImage: campaignImageBase64,
       userWallet,
@@ -123,6 +127,7 @@ export async function createCampaign({
 
     // Step 4: Deserialize and sign the transaction
     const transaction = Transaction.from(Buffer.from(unsignedTransaction, 'base64'));
+    transaction.sign(keyPair);
     const signedTransaction = await signTransaction(transaction);
 
     // Step 5: Send the signed transaction

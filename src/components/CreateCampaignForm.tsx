@@ -411,7 +411,7 @@ const CreateCampaignForm = () => {
                           'http://localhost:3000/create-campaign'
                         );
                         oauthUrl.searchParams.set('scope', 'tweet.read users.read offline.access');
-                        oauthUrl.searchParams.set('state', 'YOUR_RANDOM_STATE');
+                        oauthUrl.searchParams.set('state', 'create-campaign');
                         oauthUrl.searchParams.set('code_challenge', codeChallenge);
                         oauthUrl.searchParams.set('code_challenge_method', 'S256');
 

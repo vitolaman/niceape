@@ -145,7 +145,6 @@ export class CampaignJupiterService {
       const response = await fetch(url);
       if (response.ok) {
         const data = (await response.json()) as JupiterPoolsResponse;
-        console.log('Jupiter pools response:', JSON.stringify(data, null, 2));
         poolsData = Array.isArray(data.pools) ? data.pools : [];
       }
     }
