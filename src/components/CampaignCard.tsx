@@ -45,14 +45,9 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign }) => {
   };
 
   return (
-<<<<<<< HEAD
     <Link href={`/campaign/${campaign.id}`} className="block">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer">
         {/* Campaign Image */}
-=======
-    <Link href={`/campaign/${campaign.tokenMint}`} className="block group">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300">
->>>>>>> 8fd1227c2ad85f795a89d0d76f1dc13475d839d4
         <div className="relative h-48">
           <img
             src={imageSrc}

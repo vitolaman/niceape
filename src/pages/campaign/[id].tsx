@@ -144,7 +144,7 @@ export default function CampaignPage() {
                     {campaign.name}
                   </h1>
 
-                  <p className="text-gray-600 mb-6">{campaign.longDescription}</p>
+                  <p className="text-gray-600 mb-6">{campaign.shortDescription}</p>
 
                   {/* Progress Bar */}
                   <div className="mb-6">
@@ -231,7 +231,7 @@ export default function CampaignPage() {
               {/* Campaign Details */}
               <div className="lg:col-span-2">
                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-                  <TokenPriceChart data={dummyData} />
+                  {/* <TokenPriceChart data={dummyData} /> */}
 
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                     About This Campaign
@@ -245,6 +245,7 @@ export default function CampaignPage() {
               {/* Trading Interface */}
               <div className="lg:col-span-1">
                 <TradingInterface
+                  campaignToken={campaign.tokenMint}
                   campaignSymbol={campaign.tokenTicker}
                   campaignName={campaign.name}
                   currentPrice={1}
