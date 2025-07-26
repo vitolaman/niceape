@@ -192,7 +192,7 @@ The project follows a standard Next.js structure with additional Solana/Meteora 
 
 ### Key Components
 
-- `CreateCampaignForm.tsx` - Form for creating new fundraising campaigns
+- `CreatePoolButton.tsx` - Button for creating new token pools
 - `TokenChart/` - Price chart for tokens
 - `Explore/` - Token exploration interface
 

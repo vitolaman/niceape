@@ -11,10 +11,7 @@
       "console": "integratedTerminal",
       "env": {
         "NODE_OPTIONS": "--inspect"
-      },
-      "skipFiles": ["<node_internals>/**"],
-      "sourceMaps": true,
-      "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"]
+      }
     },
     {
       "name": "Next.js: debug client-side",
@@ -25,33 +22,19 @@
       "sourceMapPathOverrides": {
         "webpack://_N_E/./*": "${webRoot}/*",
         "webpack:///./*": "${webRoot}/*"
-      },
-      "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
+      }
     },
     {
-      "name": "Cloudflare Worker: debug local",
+      "name": "Next.js: debug full stack",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/node_modules/wrangler/bin/wrangler.js",
-      "args": ["dev", "worker/index.ts", "--local", "--port", "8787"],
+      "program": "${workspaceFolder}/node_modules/next/dist/bin/next",
+      "args": ["dev", "--turbopack"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "env": {
-        "NODE_OPTIONS": "--inspect=9230"
-      },
-      "skipFiles": ["<node_internals>/**"],
-      "sourceMaps": true,
-      "resolveSourceMapLocations": ["${workspaceFolder}/worker/**", "!**/node_modules/**"]
-    },
-    {
-      "name": "Cloudflare Worker: debug remote",
-      "type": "node",
-      "request": "launch",
-      "program": "${workspaceFolder}/node_modules/wrangler/bin/wrangler.js",
-      "args": ["dev", "worker/index.ts", "--remote", "--port", "8787"],
-      "cwd": "${workspaceFolder}",
-      "console": "integratedTerminal",
-      "skipFiles": ["<node_internals>/**"]
+        "NODE_OPTIONS": "--inspect"
+      }
     },
     {
       "name": "Attach to Next.js",
@@ -61,36 +44,12 @@
       "type": "node",
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "${workspaceFolder}"
-    },
-    {
-      "name": "Attach to Worker",
-      "port": 9230,
-      "request": "attach",
-      "skipFiles": ["<node_internals>/**"],
-      "type": "node",
-      "localRoot": "${workspaceFolder}",
-      "remoteRoot": "${workspaceFolder}"
     }
   ],
   "compounds": [
     {
-      "name": "Full Stack: Next.js + Worker (Local)",
-      "configurations": ["Next.js: debug server-side", "Cloudflare Worker: debug local"],
-      "stopAll": true
-    },
-    {
-      "name": "Full Stack: Next.js + Worker (Remote)",
-      "configurations": ["Next.js: debug server-side", "Cloudflare Worker: debug remote"],
-      "stopAll": true
-    },
-    {
-      "name": "Complete Full Stack Debug",
-      "configurations": [
-        "Next.js: debug server-side",
-        "Next.js: debug client-side",
-        "Cloudflare Worker: debug local"
-      ],
-      "stopAll": true
+      "name": "Next.js: debug full stack (compound)",
+      "configurations": ["Next.js: debug server-side", "Next.js: debug client-side"]
     }
   ]
 }
