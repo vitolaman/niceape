@@ -529,10 +529,10 @@ const CampaignCreationSuccess = ({ result }: { result: any }) => {
 
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <button
-          onClick={() => (window.location.href = '/')}
+          onClick={() => (window.location.href = `/campaign/${result.id}`)}
           className="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white px-6 py-3 rounded-xl font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
         >
-          View All Campaigns
+          View Campaigns
         </button>
         <button
           onClick={() => window.location.reload()}
