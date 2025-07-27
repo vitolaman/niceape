@@ -1,22 +1,53 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useWallet } from '@jup-ag/wallet-adapter';
 import Page from '@/components/ui/Page/Page';
 import Head from 'next/head';
-import { shortenAddress } from '@/lib/utils';
+import { generateCodeChallenge, generateCodeVerifier, shortenAddress } from '@/lib/utils';
 import { useTheme } from '@/contexts/ThemeProvider';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { workerApi } from '@/lib/worker-api';
+import CampaignCard from '@/components/CampaignCard';
+
+type Campaign = {
+  id: string;
+  name: string;
+  bannerUrl: string;
+  imageUrl: string;
+  tokenName: string;
+  tokenTicker: string;
+  tokenImageUrl: string;
+  campaignGoal: number;
+  raisedValue: number;
+  shortDescription: string;
+  longDescription: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  categoryId: string;
+  charityWalletAddress: string;
+  tokenMint: string;
+  transactionSignature: string;
+  websiteUrl: string | null;
+  xHandle: string | null;
+  telegramHandle: string | null;
+  userId: string;
+};
 
 export default function Profile() {
   const { publicKey, disconnect } = useWallet();
   const [isEditing, setIsEditing] = useState(false);
   const { isDarkMode, toggleDarkMode } = useTheme();
   const [pushNotifications, setPushNotifications] = useState(true);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 
-  // Mock user data - in real app this would come from your backend
   const [userProfile, setUserProfile] = useState({
-    displayName: 'NiceApe Trader',
-    xHandle: '@niceapeuser',
-    bio: 'Trading for good! Making every swap count 🦍💚',
+    displayName: '',
+    xHandle: '',
+    bio: '',
     avatar: '🦍',
+    id: '',
   });
 
   const [userStats] = useState({
@@ -25,6 +56,118 @@ export default function Profile() {
     charityGenerated: 62.5,
     mealsfunded: 125,
   });
+
+  const address = useMemo(() => publicKey?.toBase58(), [publicKey]);
+
+  useEffect(() => {
+    if (address) {
+      workerApi
+        .userAuth(address)
+        .then((data: unknown) => {
+          console.log('User authenticated:', data);
+          const response = data as {
+            success: boolean;
+            user: {
+              id: string;
+              walletAddress: string;
+              displayName?: string;
+              xHandle?: string;
+              bio?: string;
+            };
+            isNewUser: boolean;
+            message: string;
+          };
+
+          console.log(response);
+
+          setUserProfile({
+            displayName: response.user.displayName || '',
+            xHandle: response.user.xHandle || '',
+            bio: response.user.bio || '',
+            avatar: '🦍',
+            id: response.user.id || '',
+          });
+
+          if (response.success && response.user.id) {
+            localStorage.setItem('userId', response.user.id);
+            localStorage.setItem('userWallet', response.user.walletAddress);
+            console.log(response.message);
+            if (response.isNewUser) {
+              console.log('Welcome! New user created.');
+            } else {
+              console.log('Welcome back!');
+            }
+          }
+        })
+        .catch((error) => {
+          console.error('Authentication error:', error);
+        });
+    }
+  }, [address]);
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId') || '';
+
+    if (!userId) return;
+
+    workerApi
+      .getCampaignsByCreator(userId)
+      .then((data) => {
+        setCampaigns(data as Campaign[]);
+      })
+      .catch((error) => {
+        console.error('Authentication error:', error);
+      });
+  }, [address]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+
+    if (!code) return;
+
+    const verifier = localStorage.getItem('x_code_verifier');
+    if (!verifier) {
+      toast.error('No verifier found');
+      return;
+    }
+
+    const fetchTwitterProfile = async () => {
+      try {
+        const res = await fetch('/api/twitter-callback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            code,
+            verifier,
+          }),
+        });
+
+        if (!res.ok) throw new Error('Twitter login failed');
+        console.log(res);
+        const data: any = await res.json();
+        console.log('Twitter User:', data.user.data.username);
+
+        // Optional: Set formData.x_handle = data.user.username
+        setUserProfile((prev) => ({
+          ...prev,
+          x_handle: `@${data.user.data.username}`,
+        }));
+
+        const userId = localStorage.getItem('userId') || '';
+
+        const result = await workerApi.updateUser('969b616a-90c6-4a28-878f-3979602ae167', {
+          xHandle: `@${data.user.data.username}`,
+        });
+
+        toast.success(`Connected to @${data.user.data.username}`);
+      } catch (error: any) {
+        toast.error(error.message || 'Failed to connect Twitter');
+      }
+    };
+
+    fetchTwitterProfile();
+  }, []);
 
   // const [achievements] = useState([
   //   { id: 1, name: 'NiceApe Hero', description: 'Traded over $1000', icon: '🦍', earned: true },
@@ -50,8 +193,6 @@ export default function Profile() {
   //   { action: 'Sold FOOD', amount: '$75', donated: '+$0.38 donated', time: '1 day ago' },
   //   { action: 'Bought TREE', amount: '$100', donated: '+$0.50 donated', time: '3 days ago' },
   // ]);
-
-  const address = publicKey?.toBase58();
 
   const handleSaveProfile = () => {
     setIsEditing(false);
@@ -135,16 +276,34 @@ export default function Profile() {
                     >
                       X Handle
                     </label>
-                    <input
-                      type="text"
-                      value={userProfile.xHandle}
-                      onChange={(e) => setUserProfile({ ...userProfile, xHandle: e.target.value })}
-                      className={`w-full px-3 py-2 rounded-lg border ${
-                        isDarkMode
-                          ? 'bg-gray-700 border-gray-600 text-white'
-                          : 'bg-white border-gray-300 text-gray-900'
-                      }`}
-                    />
+                    <Button
+                      className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-1 rounded-lg text-lg"
+                      type="button"
+                      onClick={async () => {
+                        const codeVerifier = generateCodeVerifier(); // Use PKCE
+                        localStorage.setItem('x_code_verifier', codeVerifier); // Store for later
+                        const codeChallenge = await generateCodeChallenge(codeVerifier);
+
+                        const oauthUrl = new URL('https://twitter.com/i/oauth2/authorize');
+                        oauthUrl.searchParams.set('response_type', 'code');
+                        oauthUrl.searchParams.set(
+                          'client_id',
+                          'NEVOM3hRNmRiaU5Cb3BnRm9aWG86MTpjaQ'
+                        );
+                        oauthUrl.searchParams.set(
+                          'redirect_uri',
+                          'http://localhost:3000/twitter-handler'
+                        );
+                        oauthUrl.searchParams.set('scope', 'tweet.read users.read offline.access');
+                        oauthUrl.searchParams.set('state', 'edit-profile');
+                        oauthUrl.searchParams.set('code_challenge', codeChallenge);
+                        oauthUrl.searchParams.set('code_challenge_method', 'S256');
+
+                        window.location.href = oauthUrl.toString();
+                      }}
+                    >
+                      Connect to X
+                    </Button>
                   </div>
                   <div>
                     <label
@@ -218,39 +377,44 @@ export default function Profile() {
                   </button>
                 </div>
               </div>
-
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-500">{userStats.totalTrades}</div>
-                  <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Total Trades
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-500">${userStats.volumeTraded}</div>
-                  <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Volume Traded
-                  </div>
-                </div>
-              </div>
-
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <span className="text-green-500">💚</span>
-                  <span className="font-bold">Charity Impact</span>
-                </div>
-                <div className="text-2xl font-bold text-green-500 mb-1">
-                  ${userStats.charityGenerated}
-                </div>
-                <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>
-                  Generated in charity fees
-                </div>
-                <div className="text-blue-500 font-medium">
-                  {userStats.mealsfunded} meals funded
-                </div>
-              </div>
             </div>
           )}
+
+          {/* Campaign List */}
+
+          <div
+            className={`rounded-xl p-6 mb-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}
+          >
+            <div className="flex items-center gap-2 mb-4">
+              <h3 className="text-xl font-bold">Campaign</h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8">
+              {campaigns.map((campaign) => (
+                <CampaignCard
+                  key={campaign.id}
+                  campaign={{
+                    id: campaign.id,
+                    name: campaign.name || 'Untitled Campaign',
+                    symbol: campaign.tokenTicker || 'N/A',
+                    description: campaign.shortDescription || 'No description available',
+                    image:
+                      campaign.imageUrl ||
+                      campaign.bannerUrl ||
+                      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&h=200&fit=crop',
+                    goal: campaign.campaignGoal || 0,
+                    raised: campaign.raisedValue || 0,
+                    trades24h: 0,
+                    volume24h: 0,
+                    category: 'General',
+                    tokenMint: campaign.tokenMint || '',
+                    mcap: 0,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
           {/* Achievements */}
           {/* <div
             className={`rounded-xl p-6 mb-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}

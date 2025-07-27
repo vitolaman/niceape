@@ -87,7 +87,10 @@ class WorkerApiClient {
     return this.request(`/api/users/wallet/${walletAddress}`);
   }
 
-  async updateUser(id: string, updateData: { username?: string; email?: string }) {
+  async updateUser(
+    id: string,
+    updateData: { username?: string; email?: string; xHandle?: string }
+  ) {
     return this.request(`/api/users/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updateData),
@@ -120,7 +123,7 @@ class WorkerApiClient {
   }
 
   async getCampaignsByCreator(creatorId: string) {
-    return this.request(`/api/campaigns/creator/${creatorId}`);
+    return this.request(`/api/campaignsByUser/${creatorId}`);
   }
 
   async updateCampaign(

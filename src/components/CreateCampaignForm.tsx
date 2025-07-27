@@ -408,7 +408,7 @@ const CreateCampaignForm = () => {
                         );
                         oauthUrl.searchParams.set(
                           'redirect_uri',
-                          'http://localhost:3000/create-campaign'
+                          'http://localhost:3000/twitter-handler'
                         );
                         oauthUrl.searchParams.set('scope', 'tweet.read users.read offline.access');
                         oauthUrl.searchParams.set('state', 'create-campaign');

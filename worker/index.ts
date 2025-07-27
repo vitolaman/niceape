@@ -92,6 +92,7 @@ export default {
 
         if (path.startsWith('/api/users/') && method === 'PUT') {
           const userId = path.split('/')[3];
+          console.log(path, userId);
           const body = (await request.json()) as any;
           const user = await userService.updateUser(userId, body);
           return jsonResponse(user);
@@ -166,17 +167,19 @@ export default {
           return jsonResponse(campaign);
         }
 
+        if (path.startsWith('/api/campaignsByUser/') && method === 'GET') {
+          console.log('ini');
+          const userId = path.split('/')[3];
+          const campaigns = await campaignService.getCampaignsByUser(userId);
+          console.log(jsonResponse(campaigns));
+          return jsonResponse(campaigns);
+        }
+
         if (path.startsWith('/api/campaigns/') && method === 'PUT') {
           const campaignId = path.split('/')[3];
           const body = (await request.json()) as any;
           const campaign = await campaignService.updateCampaign(campaignId, body);
           return jsonResponse(campaign);
-        }
-
-        if (path.startsWith('/api/campaigns/user/') && method === 'GET') {
-          const userId = path.split('/')[4];
-          const campaigns = await campaignService.getCampaignsByUser(userId);
-          return jsonResponse(campaigns);
         }
 
         if (path.startsWith('/api/campaigns/category/') && method === 'GET') {
