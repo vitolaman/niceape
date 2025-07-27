@@ -88,15 +88,11 @@ export class CreateCampaignService {
   async createCampaign(data: CreateCampaignDto): Promise<CreateCampaignData> {
     const { formData, tokenImage, campaignImage, userWallet, userId } = data;
 
-    // Generate keypair for the token
-    const keyPair = Keypair.generate();
-    const mint = keyPair.publicKey.toBase58();
-
     // Step 1: Upload files to R2 cloud storage
     const { tokenImageUrl, campaignImageUrl } = await this.uploadFilesToR2(
       tokenImage,
       campaignImage,
-      mint
+      formData.mint
     );
 
     // Step 2: Upload metadata to R2 (for token creation)
@@ -105,24 +101,21 @@ export class CreateCampaignService {
       symbol: formData.token_ticker,
       image: tokenImageUrl,
     };
-    const metadataUrl = await this.uploadMetadataToR2Worker(metadata, 'metadata', mint);
+    const metadataUrl = await this.uploadMetadataToR2Worker(metadata, 'metadata', formData.mint);
 
     // Step 3: Create pool transaction
     const poolTx = await this.createPoolTransaction({
-      mint,
+      mint: formData.mint,
       tokenName: formData.token_name,
       tokenSymbol: formData.token_ticker,
       metadataUrl,
       userWallet,
     });
 
-    // Step 4: Sign with keypair first
-    poolTx.sign(keyPair);
-
-    // Step 5: Serialize transaction for client-side signing
+    // Step 4: Serialize transaction for client-side signing
     const serializedTx = poolTx.serialize({ requireAllSignatures: false }).toString('base64');
 
-    // Step 6: Save campaign to database with DRAFTED status
+    // Step 5: Save campaign to database with DRAFTED status
     const newCampaign: NewCampaign = {
       id: crypto.randomUUID(),
       name: formData.name,
@@ -141,7 +134,7 @@ export class CreateCampaignService {
       websiteUrl: formData.website_url || null,
       xHandle: formData.x_handle || null,
       telegramHandle: formData.telegram_handle || null,
-      tokenMint: mint,
+      tokenMint: formData.mint,
       transactionSignature: null, // No transaction signature yet
       status: CampaignStatus.DRAFTED, // Set status to DRAFTED
       createdAt: new Date().toISOString(),
@@ -175,12 +168,12 @@ export class CreateCampaignService {
       imageUrl: campaignImageUrl,
       bannerUrl: campaignImageUrl, // Using campaign image as banner for now
       userId: userId,
-      tokenMint: mint,
+      tokenMint: formData.mint,
       createdAt: new Date().toISOString(),
     };
 
     return {
-      tokenMint: mint,
+      tokenMint: formData.mint,
       unsignedTransaction: serializedTx,
       campaignData: campaignDataForDB,
       metadataUrl,

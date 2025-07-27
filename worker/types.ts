@@ -21,6 +21,10 @@ export interface Env {
   DEVNET_POOL_CONFIG_KEY: string;
   NEXT_PUBLIC_METEORA_DBC_PROGRAM_ID: string;
   SOL_WALLET_DEVNET_PRIVATE_KEY: string;
+
+  // Twitter OAuth
+  TWITTER_CLIENT_ID: string;
+  TWITTER_CLIENT_SECRET: string;
 }
 
 // Campaign Status Constants
@@ -29,4 +33,5 @@ export const CampaignStatus = {
   SUCCESS: 'SUCCESS',
   FAILED: 'FAILED',
 } as const;
+
 export type CampaignStatus = (typeof CampaignStatus)[keyof typeof CampaignStatus];

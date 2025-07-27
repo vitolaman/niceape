@@ -13,6 +13,7 @@ export const createCampaignDto = z.object({
     website_url: z.string(),
     x_handle: z.string(),
     telegram_handle: z.string(),
+    mint: z.string(),
   }),
   tokenImage: z.string(), // base64
   campaignImage: z.string(), // base64

@@ -1,6 +1,6 @@
 import { createDb } from '../db';
-import { campaigns, insertCampaignSchema } from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { campaigns, insertCampaignSchema, users } from '../db/schema';
+import { and, eq } from 'drizzle-orm';
 import { Env } from '../types';
 import { mapCampaignToResponse } from '../lib/field-mapping';
 import {
@@ -54,14 +54,31 @@ export class CampaignService {
       .where(activeWithCondition(campaigns.deletedAt, eq(campaigns.id, id)))
       .limit(1);
 
-    return campaign[0] ? mapCampaignToResponse(campaign[0]) : null;
+    if (!campaign[0]) return null;
+
+    const user = await this.db
+      .select()
+      .from(users)
+      .where(activeWithCondition(users.deletedAt, eq(users.id, campaign[0].userId)))
+      .limit(1);
+
+    return {
+      ...mapCampaignToResponse(campaign[0]),
+      user: user[0] ?? null,
+    };
   }
 
   async getCampaignsByUser(userId: string) {
     const userCampaigns = await this.db
       .select()
       .from(campaigns)
-      .where(activeWithCondition(campaigns.deletedAt, eq(campaigns.userId, userId)));
+      .where(
+        and(
+          activeWithCondition(campaigns.deletedAt, eq(campaigns.userId, userId)),
+          eq(campaigns.status, 'SUCCESS')
+        )
+      );
+
     return userCampaigns.map(mapCampaignToResponse);
   }
 

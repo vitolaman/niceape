@@ -6,11 +6,13 @@ interface TradingInterfaceProps {
   campaignSymbol: string;
   campaignName: string;
   currentPrice: number;
+  campaignToken: string; // Added campaignToken prop for future use
 }
 
 const TradingInterface: React.FC<TradingInterfaceProps> = ({
   campaignSymbol,
   campaignName,
+  campaignToken,
   currentPrice,
 }) => {
   const { publicKey } = useWallet();
@@ -42,13 +44,23 @@ const TradingInterface: React.FC<TradingInterfaceProps> = ({
         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
           Trade {campaignSymbol} - {campaignName}
         </h3>
-        <p className="text-gray-600 dark:text-gray-400">
-          Current Price: ${currentPrice.toFixed(4)}
-        </p>
       </div>
+      <Button
+        className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-1 rounded-lg text-lg"
+        type="button"
+        onClick={async () => {
+          const tradeUrl = new URL(
+            `https://jup.ag/swap?sell=So11111111111111111111111111111111111111112&buy=${campaignToken}`
+          );
 
-      <form onSubmit={handleTrade} className="space-y-4">
-        {/* Trade Type Selector */}
+          window.location.href = tradeUrl.toString();
+        }}
+      >
+        Trade on Jupiter
+      </Button>
+
+      {/* <form onSubmit={handleTrade} className="space-y-4">
+        Trade Type Selector
         <div className="flex rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden">
           <button
             type="button"
@@ -74,7 +86,7 @@ const TradingInterface: React.FC<TradingInterfaceProps> = ({
           </button>
         </div>
 
-        {/* Amount Input */}
+        Amount Input
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Amount ({campaignSymbol})
@@ -90,7 +102,7 @@ const TradingInterface: React.FC<TradingInterfaceProps> = ({
           />
         </div>
 
-        {/* Estimated Cost */}
+        Estimated Cost
         {amount && (
           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 transition-colors duration-300">
             <div className="flex justify-between items-center text-sm">
@@ -104,14 +116,14 @@ const TradingInterface: React.FC<TradingInterfaceProps> = ({
           </div>
         )}
 
-        {/* Trading Fee Notice */}
+        Trading Fee Notice
         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 transition-colors duration-300">
           <p className="text-sm text-blue-800 dark:text-blue-300">
             💡 Trading fees from this transaction will be donated to {campaignName}
           </p>
         </div>
 
-        {/* Trade Button */}
+        Trade Button
         <Button
           type="submit"
           className={`w-full font-medium py-3 rounded-lg text-white ${
@@ -123,7 +135,7 @@ const TradingInterface: React.FC<TradingInterfaceProps> = ({
             ? 'Connect Wallet to Trade'
             : `${tradeType === 'buy' ? 'Buy' : 'Sell'} ${campaignSymbol}`}
         </Button>
-      </form>
+      </form> */}
     </div>
   );
 };
