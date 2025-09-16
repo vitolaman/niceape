@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white py-8 px-4 border-t border-gray-200 dark:border-gray-800 transition-colors duration-300">
+    <footer className="bg-black text-white py-8 px-4 border-t border-gray-200 border-gray-800 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
@@ -15,7 +15,7 @@ const Footer = () => {
               />
               <span className="text-xl font-bold">NiceApe</span>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">Trade to Donate</p>
+            <p className="text-white mt-2">Trade to Donate</p>
           </div>
 
           <div className="flex gap-6">
@@ -23,26 +23,17 @@ const Footer = () => {
               href="https://x.com/niceapeapp"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="text-white hover:text-primary transition-colors"
             >
               X (Twitter)
             </a>
-            <Link
-              href="/about"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
+            <Link href="/about" className="text-white hover:text-primary transition-colors">
               About
             </Link>
-            <Link
-              href="/help"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
+            <Link href="/help" className="text-white hover:text-primary transition-colors">
               Help
             </Link>
-            <Link
-              href="/terms"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
+            <Link href="/terms" className="text-white hover:text-primary transition-colors">
               Terms
             </Link>
           </div>

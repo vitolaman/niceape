@@ -77,7 +77,7 @@ export default {
           950: '#4b0624',
         },
         primary: {
-          DEFAULT: '#c7f284',
+          DEFAULT: '#f9c80e',
           200: '#c7f284',
           300: '#a1c56e',
           400: '#698453',
@@ -87,6 +87,9 @@ export default {
           800: '#151f20',
           900: '#121a1c',
           950: '#0c1418',
+        },
+        background: {
+          DEFAULT: '#fff',
         },
       },
     },

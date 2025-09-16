@@ -67,15 +67,13 @@ export const Header = () => {
   }, []);
 
   return (
-    <header className="w-full px-4 py-4 bg-white dark:bg-gray-800 border-b dark:border-gray-700 sticky top-0 z-50 transition-colors duration-300">
+    <header className="w-full px-4 py-4 bg-background/60 backdrop-blur-md border-b border-[#e5e5e5] sticky top-0 z-50 transition-colors duration-300">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo Section */}
         <Link href="/" className="flex items-center gap-3">
           <img src="/logo.jpg" alt="NiceApe Logo" className="w-10 h-10 rounded-full object-cover" />
           <div className="flex flex-col">
-            <span className="text-xl font-bold text-gray-900 dark:text-white leading-tight">
-              NiceApe
-            </span>
+            <span className="text-xl font-bold text-primary leading-tight">NiceApe</span>
             <span className="text-xs text-green-600 dark:text-green-400 font-medium uppercase tracking-wide">
               Trade to Donate
             </span>
