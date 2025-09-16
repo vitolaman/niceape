@@ -1,9 +1,7 @@
-import Page from '@/components/ui/Page/Page';
-import ActiveCampaigns from '@/components/ActiveCampaigns';
-import LaunchCampaign from '@/components/LaunchCampaign';
-import PlatformStats from '@/components/PlatformStats';
 import Head from 'next/head';
 import Hero2 from '@/components/Hero2';
+import Page2 from '@/components/ui/Page/Page2';
+import ActiveCampaigns2 from '@/components/ActiveCampaigns2';
 
 export default function Index() {
   return (
@@ -11,11 +9,11 @@ export default function Index() {
       <Head>
         <title>NiceApe - Trade to Donate</title>
       </Head>
-      <Page>
+      <Page2>
         <Hero2 />
-        <ActiveCampaigns />
+        <ActiveCampaigns2 />
         {/* <PlatformStats /> */}
-      </Page>
+      </Page2>
     </>
   );
 }

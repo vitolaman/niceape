@@ -5,20 +5,6 @@ import { useCampaignsWithJupiter } from '@/hooks/useCampaignsWithJupiter';
 const ActiveCampaigns = () => {
   const { data: campaigns, isLoading, error } = useCampaignsWithJupiter();
 
-  return (
-    <div id="campaigns" className="py-16 px-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h3 className="text-3xl font-bold text-black mb-4">Active Campaigns</h3>
-          <p className="text-lg text-black">Coming Soon</p>
-        </div>
-        <div className="flex justify-center">
-          {/* <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div> */}
-        </div>
-      </div>
-    </div>
-  );
-
   if (isLoading) {
     return (
       <div id="campaigns" className="py-16 px-4">
@@ -47,7 +33,9 @@ const ActiveCampaigns = () => {
             <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               Active Campaigns
             </h3>
-            <p className="text-lg text-red-600 dark:text-red-400">Comming Soon</p>
+            <p className="text-lg text-red-600 dark:text-red-400">
+              Failed to load campaigns. Please try again later.
+            </p>
           </div>
         </div>
       </div>

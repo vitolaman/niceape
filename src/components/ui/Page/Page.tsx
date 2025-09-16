@@ -15,7 +15,7 @@ const Page: React.FC<React.PropsWithChildren<IProps>> = ({
   return (
     <div
       className={cn(
-        'flex min-h-screen flex-col bg-white text-gray-900 dark:text-white transition-colors duration-300',
+        'flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300',
         pageClassName
       )}
     >
